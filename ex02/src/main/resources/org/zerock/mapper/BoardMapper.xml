@@ -29,6 +29,6 @@
 	</update>
 	
 	<delete id="delete">
-		delete from tbl_boadr where bno = #{bno}
+		delete from tbl_board where bno = #{bno}
 	</delete>
 </mapper>

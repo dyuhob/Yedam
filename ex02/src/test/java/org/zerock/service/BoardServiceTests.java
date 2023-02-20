@@ -28,7 +28,7 @@ public class BoardServiceTests {
 	
 	@Test
 	public void testModify() {
-		BoardVO board = service.get(2L);
+		BoardVO board = service.get(21L);
 		
 		board.setContent("바뀐 내용입니다.");
 		service.modify(board);
