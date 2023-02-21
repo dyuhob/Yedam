@@ -1,17 +1,18 @@
 package org.zerock.controller;
 
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
-
 import java.util.List;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.zerock.domain.BoardVO;
+import org.zerock.domain.Criteria;
+import org.zerock.domain.PageDTO;
 import org.zerock.service.BoardService;
 
 import lombok.AllArgsConstructor;
@@ -27,11 +28,13 @@ public class BoardController {
 	private BoardService service;
 	
 	@GetMapping("/list")
-	public void list(Model model) {
+	public void list(Criteria cri, Model model) {
 		log.info("list.......");
-		List<BoardVO> list = service.getList();
+		List<BoardVO> list = service.getList(cri);
+		int total = service.getTotal(cri);
 		
 		model.addAttribute("boardList", list);
+		model.addAttribute("pageMaker", new PageDTO(cri, total));
 		
 		//return "listing";
 	}
@@ -42,12 +45,17 @@ public class BoardController {
 		
 		service.register(board);
 		rttr.addFlashAttribute("result", board.getBno());
-		
-		return "redriect:/board/list";
+		return "redirect:/board/list";
 	}
 	
-	@GetMapping("/get")
-	public void get(@RequestParam("bno") Long bno, Model model) {
+	@GetMapping("/register")
+	public void register() {
+		
+	}
+	
+	
+	@GetMapping({"/get", "/modify"})
+	public void get(@RequestParam("bno") Long bno, @ModelAttribute("cri") Criteria cri, Model model) {
 		BoardVO vo = service.get(bno);
 		
 		model.addAttribute("board", vo);
@@ -56,23 +64,28 @@ public class BoardController {
 	}
 	
 	@PostMapping("/modify")
-	public String modify(BoardVO vo, RedirectAttributes rttr) {
-
+	public String modify(BoardVO vo, @ModelAttribute("cri") Criteria cri, RedirectAttributes rttr) {
+		System.out.println(vo);
 		if(service.modify(vo)) {
 			rttr.addFlashAttribute("result", "success");
 		} else {
 			rttr.addFlashAttribute("result", "fail");
-		}		
-		return "redriect:/board/list";
+		}
+		rttr.addAttribute("pageNum", cri.getPageNum());
+		rttr.addAttribute("amount", cri.getAmount());
+		return "redirect:/board/list";
 	}
 	
 	@PostMapping("/remove")
-	public String remove(@RequestParam("bno") Long bno, RedirectAttributes rttr) {
+	public String remove(@RequestParam("bno") Long bno, @ModelAttribute("cri") Criteria cri, RedirectAttributes rttr) {
 		if(service.remove(bno)) {
 			rttr.addFlashAttribute("result", "success");
 		} else {
 			rttr.addFlashAttribute("result", "fail");
-		}		
-		return "redriect:/board/list";
+		}
+		
+		rttr.addAttribute("pageNum", cri.getPageNum());
+		rttr.addAttribute("amount", cri.getAmount());
+		return "redirect:/board/list";
 	}
 }

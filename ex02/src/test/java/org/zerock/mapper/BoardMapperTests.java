@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.zerock.domain.BoardVO;
+import org.zerock.domain.Criteria;
 
 import lombok.Setter;
 import lombok.extern.log4j.Log4j;
@@ -20,7 +21,23 @@ public class BoardMapperTests {
 	@Setter(onMethod_ = @Autowired)
 	private BoardMapper mapper;
 	
+	
 	@Test
+	public void testPaging() {
+		Criteria cri = new Criteria(); // pageNum=1, amount=10
+		cri.setPageNum(1);
+		cri.setAmount(10);
+		cri.setType("T");
+		cri.setKeyword("테스트");
+		System.out.println(cri);
+		List<BoardVO> list = mapper.getListWithPaging(cri);
+		for(BoardVO vo : list) {
+			log.info(vo);
+		}
+	}
+	
+	
+	
 	public void testGetList() {
 		List<BoardVO> list = mapper.getList();
 		for(BoardVO vo : list) {
@@ -28,7 +45,7 @@ public class BoardMapperTests {
 		}
 	}
 	
-	@Test
+	
 	public void testInsert() {
 		BoardVO board = new BoardVO();
 		board.setTitle("새로 작성하는 글");
@@ -47,7 +64,7 @@ public class BoardMapperTests {
 		log.info("board2..." + board2);
 	}
 	
-	@Test
+	
 	public void testRead() {
 		BoardVO board = mapper.read(21L);
 		

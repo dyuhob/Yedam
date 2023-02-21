@@ -1,12 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
-</head>
-<body>
+
 	     </div>
         <!-- /#page-wrapper -->
 
@@ -42,6 +36,3 @@
         .attr("style", "height:1px")
     });
     </script>
-    
-</body>
-</html>

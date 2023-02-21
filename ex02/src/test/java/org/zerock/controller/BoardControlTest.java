@@ -53,7 +53,10 @@ public class BoardControlTest {
 	
 	@Test
 	public void testList() throws Exception { // localhost:8080/board/list
-		ModelMap result = mockMvc.perform(MockMvcRequestBuilders.get("/board/list")).andReturn().getModelAndView()
+		ModelMap result = mockMvc.perform(MockMvcRequestBuilders.get("/board/list")
+				.param("pageNum", "2")
+				.param("amount", "10"))
+				.andReturn().getModelAndView()
 				.getModelMap();
 
 		log.info(result);
